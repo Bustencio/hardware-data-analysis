@@ -6,3 +6,4 @@ class Product(scrapy.Item):
     item_id = scrapy.Field()
     item_price = scrapy.Field()
     item_category = scrapy.Field()
+    item_source = scrapy.Field()

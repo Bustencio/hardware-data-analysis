@@ -10,4 +10,8 @@ from itemadapter import ItemAdapter
 
 class HardwareScraperPipeline:
     def process_item(self, item, spider):
+
+        item['item_id'] = str(item['item_id']).replace("[","").replace("]","").replace("'", "")
+        item['item_category'] = str(item['item_category']).replace("[","").replace("]","").replace("'", "")
+
         return item
