@@ -1,25 +1,31 @@
 import scrapy
+import logging
+
 from hardware_scraper.items import Product
+
+#logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s', level=logging.WARNING)
 
 
 class PccomSpider(scrapy.Spider):
     name = 'pccom'
     allowed_domains = ['pccomponentes.com']
     start_urls = ['https://www.pccomponentes.com/componentes']
-
     all_categories = []
 
     def yield_category(self):
-        print(self.all_categories)
         if self.all_categories:
             url = self.all_categories.pop()
-            print("Scraping category %s " % (url))
+            logging.warning("Scraping category %s " % (url))
             return scrapy.Request(url, self.parse_item_list)
 
     # Scrapes links for every category from main page
     def parse(self, response):
+        catList = ['https://www.pccomponentes.com/placas-base', 'https://www.pccomponentes.com/procesadores', 'https://www.pccomponentes.com/discos-duros', 'https://www.pccomponentes.com/tarjetas-graficas', 'https://www.pccomponentes.com/memorias-ram']
+
         categories = response.xpath('//a[contains(@class,"enlace-secundario")]/@href')
-        self.all_categories = list(response.urljoin(category.extract()) for category in categories)
+        for category in categories:
+            if str(category.extract()) in catList:
+                self.all_categories.append(response.urljoin(category.extract()))
         yield self.yield_category()
 
     # Scrapes products from every page of each category
@@ -29,9 +35,9 @@ class PccomSpider(scrapy.Spider):
         products = response.xpath('//article[contains(@class,"c-product-card")]')
         for product in products:
             item = Product()
-            item['item_id'] = product.xpath('@data-name').extract_first().decode('utf-8')
+            item['item_id'] = product.xpath('@data-name').extract_first()
             item['item_price'] = float(product.xpath('@data-price').get())
-            item['item_category'] = product.xpath('@data-category').extract_first().decode('utf-8')
+            item['item_category'] = product.xpath('@data-category').extract_first()
             item['item_source'] = 'pccomponentes'
             """ item['imgSource'] = product.xpath(
                 '//div[contains(@class,"tarjeta-articulo__foto")]//img/@src').extract_first() """
@@ -43,5 +49,5 @@ class PccomSpider(scrapy.Spider):
             next_url = response.urljoin(next_page)
             yield scrapy.Request(next_url, self.parse_item_list)
         else:
-            print("All pages of this category scraped, scraping next category")
+            logging.warning("All pages of this category scraped, scraping next category")
             yield self.yield_category()

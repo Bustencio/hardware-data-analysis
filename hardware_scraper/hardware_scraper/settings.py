@@ -64,6 +64,7 @@ DOWNLOAD_DELAY = 2
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'hardware_scraper.pipelines.HardwareScraperPipeline': 300,
+    'hardware_scraper.pipelines.ItemIndexerPipeline' : 301
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -83,6 +84,10 @@ ITEM_PIPELINES = {
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
 HTTPCACHE_ENABLED = True
 #HTTPCACHE_EXPIRATION_SECS = 0
-#HTTPCACHE_DIR = 'httpcache'
-#HTTPCACHE_IGNORE_HTTP_CODES = []
+#HTTPCACHE_DIR = 'httpcache'HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+HTTPERROR_ALLOWED_CODES = [404]
+
+# Logging Config
+LOG_LEVEL = 'WARNING'
+LOG_FORMAT = '%(asctime)s - %(levelname)s: %(message)s'
