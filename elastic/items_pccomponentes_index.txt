@@ -1,0 +1,37 @@
+PUT items_pccomponentes
+{
+  "mappings": {
+    "properties": {
+      "item_id": { 
+        "type": "keyword" 
+      },
+      "item_price": { 
+        "type": "float" 
+      },
+      "item_category": { 
+        "type": "keyword" 
+      },
+      "item_source": { 
+        "type": "keyword" 
+      },
+      "item_available" : {
+        "type": "boolean"
+      },
+      "item_rating" : {
+        "type": "float"
+      },
+      "item_reviews" : {
+        "type": "integer"
+      },
+      "sale" : {
+        "type": "boolean"
+      },
+      "sale_price" : {
+        "type": "float"
+      },
+      "new" : {
+        "type": "boolean"
+      }
+    }
+  }
+}

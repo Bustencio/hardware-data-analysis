@@ -39,8 +39,14 @@ class PccomSpider(scrapy.Spider):
             item['item_price'] = float(product.xpath('@data-price').get())
             item['item_category'] = product.xpath('@data-category').extract_first()
             item['item_source'] = 'pccomponentes'
-            """ item['imgSource'] = product.xpath(
-                '//div[contains(@class,"tarjeta-articulo__foto")]//img/@src').extract_first() """
+            item['item_rating'] = product.xpath('//div[contains(@class,"c-star-rating")]/span[contains(@class,"cy-product-text")]/text()').get()
+            item['item_reviews'] = product.xpath('//div[contains(@class,"c-star-rating")]/span[contains(@class,"cy-product-rating-result")]/text()').get()
+            sale = product.xpath('//div[contains(@class,"c-product-card__discount")]/span[contains(@class,"c-badge--discount")]/text()').get()
+            if sale is None:
+                item['sale'] = False
+            else:
+                item['sale'] = True
+                item['sale_price'] = product.xpath('//div[contains(@class,"c-product-card__prices")]/div[contains(@class,"c-product-card__prices-actual")]/span/text()').get()
             yield item
 
         # URL of the next page
