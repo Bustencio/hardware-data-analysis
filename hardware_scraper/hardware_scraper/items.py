@@ -7,3 +7,9 @@ class Product(scrapy.Item):
     item_price = scrapy.Field()
     item_category = scrapy.Field()
     item_source = scrapy.Field()
+    item_rating = scrapy.Field()
+    item_reviews = scrapy.Field()
+    item_sale = scrapy.Field()
+    item_discount = scrapy.Field()
+    item_link = scrapy.Field()
+
