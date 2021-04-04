@@ -12,4 +12,3 @@ class Product(scrapy.Item):
     item_sale = scrapy.Field()
     item_discount = scrapy.Field()
     item_link = scrapy.Field()
-

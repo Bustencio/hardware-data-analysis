@@ -3,8 +3,6 @@ import logging
 
 from hardware_scraper.items import Product
 
-#logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s', level=logging.WARNING)
-
 
 class PccomSpider(scrapy.Spider):
     name = 'pccom'
@@ -41,15 +39,22 @@ class PccomSpider(scrapy.Spider):
             item['item_source'] = 'pccomponentes'   
             reviews = product.xpath('.//div[contains(@class,"c-star-rating")]/span[contains(@class,"cy-product-rating-result")]/text()').get()
             if reviews is not None:
-                item['item_rating'] = product.xpath('.//div[contains(@class,"c-star-rating")]/span[contains(@class,"cy-product-text")]/text()').get()
-                item['item_reviews'] = reviews.split(' ')[0]
+                item['item_rating'] = float(product.xpath('.//div[contains(@class,"c-star-rating")]/span[contains(@class,"cy-product-text")]/text()').get())
+                item['item_reviews'] = int(reviews.split(' ')[0])
+            else:
+                item['item_rating'] = 0
+                item['item_reviews'] = 0
+
             item['item_link'] = response.urljoin(product.xpath('.//a[contains(@class,"enlace-superpuesto")]/@href').extract_first())
             sale = product.xpath('.//div[contains(@class,"c-product-card__discount")]/span[contains(@class,"c-badge--discount")]/text()').get()
+
             if sale is None:
                 item['item_sale'] = False
+                item['item_discount'] = 0
             else:
                 item['item_sale'] = True
-                item['item_discount'] = sale[1:-1]
+                item['item_discount'] = int(sale[1:-1])
+
             yield item
 
         # URL of the next page

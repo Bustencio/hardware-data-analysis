@@ -1,10 +1,3 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
-
-# useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 from elasticsearch import Elasticsearch
 
@@ -24,17 +17,42 @@ class ItemIndexerPipeline:
             global es
             es = Elasticsearch(timeout = 300, retry_on_timeout = True)
             
-            print(es)
         except Exception as e: 
             print(e)
 
     def process_item(self, item, spider):
-        doc = {
-            "item_id" : item["item_id"],
-            "item_price" : item["item_price"],
-            "item_category" : item["item_category"],
-            "item_source" : item["item_source"]
+        sourceList = {
+            'pccomponentes': {
+                'doc ': {
+                    "item_id" : item["item_id"],
+                    "item_price" : item["item_price"],
+                    "item_category" : item["item_category"],
+                    "item_source" : item["item_source"],
+                    "item_reviews" : item["item_reviews"],
+                    "item_rating" : item["item_rating"],
+                    "item_sale" : item["item_sale"],
+                    "item_discount" : item["item_discount"],
+                    "item_link" : item["item_link"]
+                },
+                'index' : 'items_pccomponentes'
+            },
+            'wipoid': {
+                'doc ': {
+                    "item_id" : item["item_id"],
+                    "item_price" : item["item_price"],
+                    "item_category" : item["item_category"],
+                    "item_source" : item["item_source"],
+                    "item_reviews" : item["item_reviews"],
+                    "item_rating" : item["item_rating"],
+                    "item_sale" : item["item_sale"],
+                    "item_discount" : item["item_discount"],
+                    "item_link" : item["item_link"]
+                },
+                'index' : 'items_wipoid'
+            }
         }
 
-        res = es.index(index='items_pccomponentes', body=doc)
-        #print(res)
+        index = sourceList[item["item_source"]]['index']
+        document = sourceList[item["item_source"]]['doc']
+
+        res = es.index(index=index, body=document)
