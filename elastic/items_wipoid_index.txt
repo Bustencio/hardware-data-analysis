@@ -1,0 +1,31 @@
+PUT items_wipoid
+{
+  "mappings": {
+    "properties": {
+      "item_id": { 
+        "type": "keyword" 
+      },
+      "item_price": { 
+        "type": "float" 
+      },
+      "item_category": { 
+        "type": "keyword" 
+      },
+      "item_source": { 
+        "type": "keyword" 
+      },
+      "item_available" : {
+        "type": "boolean"
+      },
+      "sale" : {
+        "type": "boolean"
+      },
+      "sale_price" : {
+        "type": "float"
+      },
+      "new" : {
+        "type": "boolean"
+      }
+    }
+  }
+}

@@ -35,7 +35,7 @@ class WipoidSpider(scrapy.Spider):
             item = Product()
             item['item_id'] = product.xpath('.//a[contains(@class,"product-name")]/@title').get()
             item['item_price'] = float(product.xpath('.//span[contains(@class,"price product-price")]/@content').get().strip())
-            item['item_category'] = response.xpath('/h2[contains(@class,"category-name")]').get()
+            item['item_category'] = response.xpath('//h2[contains(@class,"category-name")]/text()').get().strip()
             item['item_source'] = 'wipoid'   
             item['item_link'] = product.xpath('.//a[contains(@class,"product-name")]/@href').extract_first()
             sale = product.xpath('.//span[contains(@class,"old-price")]/text()').get()
@@ -48,10 +48,18 @@ class WipoidSpider(scrapy.Spider):
                 salePrice = float(str(sale.replace(',','.').strip())[:-2])
                 item['item_discount'] = int(100-(item['item_price']*100//salePrice))
 
+            stock = product.xpath('.//a[contains(@class,"btn-addtocart")]').get()
+            stockText = product.xpath('./span/text()').get()
+
+            if stock is None or stockText == 'Sin stock':
+                item['item_available'] = False
+            else:
+                item['item_available'] = True
+
             yield item
 
         # URL of the next page
-        next_page = response.xpath('//div[@id="pager"]//li[contains(@class,"c-paginator__next")]//a/@href').extract_first()
+        next_page = response.xpath('//div[contains(@class,"pagination")]//li[contains(@class,"pagination_next")]//a/@href').get()
         if next_page:
             next_url = response.urljoin(next_page)
             yield scrapy.Request(next_url, self.parse_item_list)
