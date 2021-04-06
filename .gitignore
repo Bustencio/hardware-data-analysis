@@ -128,3 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 hardware_scraper/hardware_scraper/data.json
+hardware_scraper/hardware_scraper/dataCoolmod.json
