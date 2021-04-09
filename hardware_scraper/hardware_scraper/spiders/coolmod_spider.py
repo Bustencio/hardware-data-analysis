@@ -26,7 +26,6 @@ class CoolmodSpider(scrapy.Spider):
         categories = response.xpath('//li[contains(@class,"mod-li-cat")]//a/@href')
         for category in categories:
             if str(response.urljoin(category.extract())) in catList:
-                print(str(response.urljoin(category.extract())))
                 self.all_categories.append(response.urljoin(category.extract()))
         yield self.yield_category()
 
