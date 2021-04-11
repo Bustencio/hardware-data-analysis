@@ -13,7 +13,7 @@ class PccomSpider(scrapy.Spider):
     def yield_category(self):
         if self.all_categories:
             url = self.all_categories.pop()
-            logging.warning("Scraping category %s " % (url))
+            logging.info("Scraping category %s " % (url))
             return scrapy.Request(url, self.parse_item_list)
 
     # Scrapes links for every category from main page
@@ -63,5 +63,5 @@ class PccomSpider(scrapy.Spider):
             next_url = response.urljoin(next_page)
             yield scrapy.Request(next_url, self.parse_item_list)
         else:
-            logging.warning("All pages of this category scraped, scraping next category")
+            logging.info("All pages of this category scraped, scraping next category")
             yield self.yield_category()

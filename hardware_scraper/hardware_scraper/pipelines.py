@@ -68,6 +68,33 @@ class ItemIndexerPipeline:
                         "item_available" : item["item_available"],
                         "item_date" : now.strftime("%Y-%m-%d")
                     }
+            elif source is 'alternate':
+                index = 'items_alternate'
+                doc = {
+                        "item_id" : item["item_id"],
+                        "item_price" : item["item_price"],
+                        "item_category" : item["item_category"],
+                        "item_source" : item["item_source"],
+                        "item_sale" : item["item_sale"],
+                        "item_discount" : item["item_discount"],
+                        "item_link" : item["item_link"],
+                        "item_available" : item["item_available"],
+                        "item_date" : now.strftime("%Y-%m-%d")
+                    }
+            else:
+                index = 'items_life-informatica'
+                doc = {
+                        "item_id" : item["item_id"],
+                        "item_price" : item["item_price"],
+                        "item_category" : item["item_category"],
+                        "item_source" : item["item_source"],
+                        "item_sale" : item["item_sale"],
+                        "item_discount" : item["item_discount"],
+                        "item_link" : item["item_link"],
+                        "item_available" : item["item_available"],
+                        "item_date" : now.strftime("%Y-%m-%d")
+                    }
+
 
             res = es.index(index=index, body=doc)
 

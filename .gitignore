@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 hardware_scraper/hardware_scraper/data.json
 hardware_scraper/hardware_scraper/dataCoolmod.json
+hardware_scraper/data.json
