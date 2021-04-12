@@ -95,7 +95,6 @@ class ItemIndexerPipeline:
                         "item_date" : now.strftime("%Y-%m-%d")
                     }
 
-
             res = es.index(index=index, body=doc)
 
         except ElasticsearchException as err:

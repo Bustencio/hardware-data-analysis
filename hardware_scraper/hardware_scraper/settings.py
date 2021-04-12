@@ -93,7 +93,7 @@ HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
 HTTPERROR_ALLOWED_CODES = [404]
 
 # Logging Config
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'WARNING'
 LOG_FORMAT = '%(asctime)s - %(levelname)s: %(message)s'
 
 # Splash Config 

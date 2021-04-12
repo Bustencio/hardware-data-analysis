@@ -1,7 +1,7 @@
-PUT items_wipoid
+PUT items_coolmod
 {
-  "mappings": {
-    "properties": {
+  "mappings" : {
+    "properties" : {
       "item_available" : {
         "type" : "boolean"
       },

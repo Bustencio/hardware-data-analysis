@@ -1,0 +1,35 @@
+PUT items_life-informatica
+{
+  "mappings": {
+    "properties": {
+      "item_id": { 
+        "type": "keyword" 
+      },
+      "item_price": { 
+        "type": "float" 
+      },
+      "item_category": { 
+        "type": "keyword" 
+      },
+      "item_source": { 
+        "type": "keyword" 
+      },
+      "item_available" : {
+        "type": "boolean"
+      },
+      "item_sale" : {
+        "type": "boolean"
+      },
+      "item_discount" : {
+        "type": "integer"
+      },
+      "item_link" : {
+        "type": "keyword"
+      },
+      "item_date": {
+        "type": "date",
+        "format": "yyyy-MM-dd"
+      }
+    }
+  }
+}

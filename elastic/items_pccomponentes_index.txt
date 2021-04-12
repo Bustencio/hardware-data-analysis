@@ -2,35 +2,39 @@ PUT items_pccomponentes
 {
   "mappings": {
     "properties": {
-      "item_id": { 
-        "type": "keyword" 
-      },
-      "item_price": { 
-        "type": "float" 
-      },
-      "item_category": { 
-        "type": "keyword" 
-      },
-      "item_source": { 
-        "type": "keyword" 
-      },
       "item_available" : {
-        "type": "boolean"
+        "type" : "boolean"
+      },
+      "item_category" : {
+        "type" : "keyword"
+      },
+      "item_date" : {
+        "type" : "date",
+        "format" : "yyyy-MM-dd"
+      },
+      "item_discount" : {
+        "type" : "integer"
+      },
+      "item_id" : {
+        "type" : "keyword"
+      },
+      "item_link" : {
+        "type" : "keyword"
+      },
+      "item_price" : {
+        "type" : "float"
       },
       "item_rating" : {
-        "type": "float"
+        "type" : "float"
       },
       "item_reviews" : {
-        "type": "integer"
+        "type" : "integer"
       },
-      "sale" : {
-        "type": "boolean"
+      "item_sale" : {
+        "type" : "boolean"
       },
-      "sale_price" : {
-        "type": "float"
-      },
-      "new" : {
-        "type": "boolean"
+      "item_source" : {
+        "type" : "keyword"
       }
     }
   }
