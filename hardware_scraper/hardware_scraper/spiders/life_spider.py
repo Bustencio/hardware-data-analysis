@@ -14,7 +14,7 @@ class LifeSpider(scrapy.Spider):
     def yield_category(self):
         if self.all_categories:
             url = self.all_categories.pop()
-            logging.info("Scraping category %s " % (url))
+            logging.warning("Scraping category %s " % (url))
             print(url)
             return scrapy.Request(url, self.load_items, cb_kwargs=dict(item_url=url))
             
@@ -83,5 +83,5 @@ class LifeSpider(scrapy.Spider):
 
             yield item
 
-        logging.info("All pages of this category scraped, scraping next category")
+        logging.warning("All pages of this category scraped, scraping next category")
         yield self.yield_category()

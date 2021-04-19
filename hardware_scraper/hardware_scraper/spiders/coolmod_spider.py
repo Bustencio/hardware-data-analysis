@@ -16,7 +16,7 @@ class CoolmodSpider(scrapy.Spider):
             if url == 'https://www.coolmod.com/componentes-pc-discos-duros':
                 url = 'https://www.coolmod.com/discos-ssd'
             
-            logging.info("Scraping category %s " % (url))
+            logging.warning("Scraping category %s " % (url))
             return scrapy.Request(url, self.load_items, cb_kwargs=dict(item_url=url))
 
     # Scrapes links for every category from main page
@@ -94,5 +94,5 @@ class CoolmodSpider(scrapy.Spider):
             next_url = response.urljoin(next_page)
             yield scrapy.Request(next_url, self.parse_item_list)
         else:
-            logging.info("All pages of this category scraped, scraping next category")
+            logging.warning("All pages of this category scraped, scraping next category")
             yield self.yield_category()
