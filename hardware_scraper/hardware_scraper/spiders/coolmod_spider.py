@@ -31,16 +31,24 @@ class CoolmodSpider(scrapy.Spider):
 
     # Scrapes products from every page of each category
     def load_items(self, response, item_url):
-
         script = """
         function main(splash, args)
             assert(splash:go(args.url))
-            assert(splash:wait(0.5))
+            assert(splash:wait(5))
+
+            if splash:select('.sweet-overlay') ~= nil then
+                local element = splash:select('.sweet-overlay')
+                local bounds = element:bounds()
+                assert(element:mouse_click{x=10, y=100})
+            end   
+
+            assert(splash:wait(1))
+
             while splash:select('.button-load-more') do
                 local element = splash:select('.button-load-more')
                 local bounds = element:bounds()
                 assert(element:mouse_click{x=bounds.width/2, y=bounds.height/2})
-                assert(splash:wait(1))
+                assert(splash:wait(3))
             end
             return {
                 html = splash:html()
@@ -48,14 +56,10 @@ class CoolmodSpider(scrapy.Spider):
         end
         """
 
-        loadMoreButton = response.xpath('//button[contains(@class,"button-load-more")]').get()
-
-        if loadMoreButton is None:
-            yield scrapy.Request(item_url, self.parse_item_list)
-        else:
-            yield SplashRequest(item_url, self.parse_item_list, endpoint='execute',
-                                args={'lua_source': script, 'timeout': 90})
-
+        #loadMoreButton = response.xpath('//button[contains(@class,"button-load-more")]').get()
+        
+        yield SplashRequest(item_url, self.parse_item_list, endpoint='execute',
+                            args={'lua_source': script, 'timeout': 300})
 
 
     def parse_item_list(self, response):

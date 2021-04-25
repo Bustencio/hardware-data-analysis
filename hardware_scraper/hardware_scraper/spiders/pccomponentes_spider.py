@@ -19,7 +19,6 @@ class PccomSpider(scrapy.Spider):
     # Scrapes links for every category from main page
     def parse(self, response):
         catList = ['https://www.pccomponentes.com/placas-base', 'https://www.pccomponentes.com/procesadores', 'https://www.pccomponentes.com/discos-duros', 'https://www.pccomponentes.com/tarjetas-graficas', 'https://www.pccomponentes.com/memorias-ram']
-
         categories = response.xpath('//a[contains(@class,"enlace-secundario")]/@href')
         for category in categories:
             if str(category.extract()) in catList:

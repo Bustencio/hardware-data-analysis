@@ -15,7 +15,6 @@ class LifeSpider(scrapy.Spider):
         if self.all_categories:
             url = self.all_categories.pop()
             logging.warning("Scraping category %s " % (url))
-            print(url)
             return scrapy.Request(url, self.load_items, cb_kwargs=dict(item_url=url))
             
             #return scrapy.Request(url, self.parse_item_list)

@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from itemadapter import ItemAdapter
 from elasticsearch import Elasticsearch, ElasticsearchException
@@ -20,7 +21,7 @@ class ItemIndexerPipeline:
             es = Elasticsearch(timeout = 300, retry_on_timeout = True)
             
         except Exception as e: 
-            print(e)
+            logging.error("Error opening connection to Elasticsearch %s " % (e))
 
     def process_item(self, item, spider):
         try:
