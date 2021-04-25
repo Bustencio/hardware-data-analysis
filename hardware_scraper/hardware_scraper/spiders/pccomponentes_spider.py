@@ -2,6 +2,7 @@ import scrapy
 import logging
 
 from hardware_scraper.items import Product
+from scrapy_splash import SplashRequest
 
 
 class PccomSpider(scrapy.Spider):
@@ -10,23 +11,45 @@ class PccomSpider(scrapy.Spider):
     start_urls = ['https://www.pccomponentes.com/componentes']
     all_categories = []
 
-    def yield_category(self):
-        if self.all_categories:
-            url = self.all_categories.pop()
-            logging.warning("Scraping category %s " % (url))
-            return scrapy.Request(url, self.parse_item_list)
-
-    # Scrapes links for every category from main page
-    def parse(self, response):
+    def start_requests(self):
         catList = ['https://www.pccomponentes.com/placas-base', 'https://www.pccomponentes.com/procesadores', 'https://www.pccomponentes.com/discos-duros', 'https://www.pccomponentes.com/tarjetas-graficas', 'https://www.pccomponentes.com/memorias-ram']
-        categories = response.xpath('//a[contains(@class,"enlace-secundario")]/@href')
-        for category in categories:
-            if str(category.extract()) in catList:
-                self.all_categories.append(response.urljoin(category.extract()))
-        yield self.yield_category()
+
+        for url in catList:
+            script = """
+            function main(splash, args)
+                local num_scrolls = 40
+                local scroll_delay = 2	
+
+                local scroll_to = splash:jsfunc("window.scrollTo")
+                local get_body_height = splash:jsfunc("function() {return document.body.scrollHeight;}")  
+                assert(splash:go(splash.args.url))
+                
+                assert(splash:wait(2.5))
+                if splash:select('.btn-more') ~= nil then
+                local element = splash:select('.btn-more')
+                local bounds = element:bounds()
+                assert(element:mouse_click{x=bounds.width/2, y=bounds.height/2})
+                end
+                
+                    assert(splash:wait(2.5))
+                for _ = 1, num_scrolls do
+                local height = get_body_height()
+                for i = 1, 10 do
+                    scroll_to(0, height * i/10)
+                    splash:wait(scroll_delay/10)
+                end
+                end
+                return {
+                html = splash:html()
+                }
+            end
+            """
+
+            yield SplashRequest(url, self.parse, endpoint='execute',
+                                args={'lua_source': script, 'timeout': 300})
 
     # Scrapes products from every page of each category
-    def parse_item_list(self, response):
+    def parse(self, response):
 
         # Create item object
         products = response.xpath('//article[contains(@class,"c-product-card")]')
@@ -55,12 +78,3 @@ class PccomSpider(scrapy.Spider):
                 item['item_discount'] = int(sale[1:-1])
 
             yield item
-
-        # URL of the next page
-        next_page = response.xpath('//div[@id="pager"]//li[contains(@class,"c-paginator__next")]//a/@href').extract_first()
-        if next_page:
-            next_url = response.urljoin(next_page)
-            yield scrapy.Request(next_url, self.parse_item_list)
-        else:
-            logging.warning("All pages of this category scraped, scraping next category")
-            yield self.yield_category()
