@@ -44,6 +44,7 @@ class PccomSpider(scrapy.Spider):
                 }
             end
             """
+            logging.warning("Scraping category %s " % (url))
 
             yield SplashRequest(url, self.parse, endpoint='execute',
                                 args={'lua_source': script, 'timeout': 300})
