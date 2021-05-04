@@ -45,7 +45,7 @@ class WipoidSpider(scrapy.Spider):
                 item['item_discount'] = 0
             else:
                 item['item_sale'] = True
-                salePrice = float(str(sale.replace(',','.').strip())[:-2])
+                salePrice = float(str(sale.replace(',','.').replace(' ','').strip())[:-2])
                 item['item_discount'] = int(100-(item['item_price']*100//salePrice))
 
             stock = product.xpath('.//a[contains(@class,"btn-addtocart")]').get()
