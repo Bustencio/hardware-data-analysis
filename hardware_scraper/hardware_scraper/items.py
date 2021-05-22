@@ -13,3 +13,10 @@ class Product(scrapy.Item):
     item_discount = scrapy.Field()
     item_link = scrapy.Field()
     item_available = scrapy.Field()
+
+
+class Article(scrapy.Item):
+    article_title = scrapy.Field()
+    article_date = scrapy.Field()
+    article_source = scrapy.Field()
+    article_link = scrapy.Field()
