@@ -34,7 +34,11 @@ class WipoidSpider(scrapy.Spider):
         for product in products:
             item = Product()
             item['item_id'] = product.xpath('.//a[contains(@class,"product-name")]/@title').get()
-            item['item_price'] = float(product.xpath('.//span[contains(@class,"price product-price")]/@content').get().strip())
+            price = product.xpath('.//span[contains(@class,"price product-price")]/@content').get()
+            if price is None:
+                item['item_price'] = 0
+            else:
+                item['item_price'] = float(str(price).replace(' ',''))
             item['item_category'] = response.xpath('//h2[contains(@class,"category-name")]/text()').get().strip()
             item['item_source'] = 'wipoid'   
             item['item_link'] = product.xpath('.//a[contains(@class,"product-name")]/@href').extract_first()

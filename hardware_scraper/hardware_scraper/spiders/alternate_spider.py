@@ -20,7 +20,7 @@ class AlternateSpider(scrapy.Spider):
     # Scrapes links for every category from main page
     def parse(self, response):
         catList = ['https://www.alternate.es/Componentes-de-PC/Discos-duros', 'https://www.alternate.es/Componentes-de-PC/Placas-base', 'https://www.alternate.es/Memoria-RAM', 'https://www.alternate.es/Componentes-de-PC/Procesadores', 'https://www.alternate.es/Tarjetas-gráficas']
-        
+
         categories = response.xpath('//form[@id="tle-tree-navigation:navigation-form"]//ul//li//a[contains(@class,"font-weight-bold")]/@href')
         for category in categories:
             if str(response.urljoin(category.get())) in catList:

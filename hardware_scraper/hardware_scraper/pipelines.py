@@ -1,17 +1,11 @@
-import datetime
+import pickle
 import logging
+import datetime
 
 from itemadapter import ItemAdapter
+from sklearn.base import TransformerMixin
 from elasticsearch import Elasticsearch, ElasticsearchException
 
-
-class HardwareScraperPipeline:
-    def process_item(self, item, spider):
-
-        item['item_id'] = str(item['item_id']).replace("[","").replace("]","").replace("'", "")
-        item['item_category'] = str(item['item_category']).replace("[","").replace("]","").replace("'", "")
-
-        return item
 
 
 class ItemIndexerPipeline:
@@ -23,9 +17,11 @@ class ItemIndexerPipeline:
         except Exception as e: 
             logging.error("Error opening connection to Elasticsearch %s " % (e))
 
+
     def process_item(self, item, spider):
         try:
             source = item["item_source"]
+
             now = datetime.datetime.now()
 
             if source is 'pccomponentes':

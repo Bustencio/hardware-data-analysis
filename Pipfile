@@ -10,6 +10,9 @@ autopep8 = "*"
 scrapy = "*"
 elasticsearch = "*"
 scrapy-splash = "*"
+sklearn = "*"
+pandas = "*"
+spacy = "*"
 
 [requires]
 python_version = "3.7"

@@ -22,7 +22,7 @@ class LifeSpider(scrapy.Spider):
     # Scrapes links for every category from main page
     def parse(self, response):
         catList = ['https://lifeinformatica.com/categoria-producto/family-componentes/family-tarjetas-graficas/', 'https://lifeinformatica.com/categoria-producto/family-componentes/family-placas-base/', 'https://lifeinformatica.com/categoria-producto/family-componentes/family-memorias-ram/', 'https://lifeinformatica.com/categoria-producto/family-componentes/family-procesadores/', 'https://lifeinformatica.com/categoria-producto/family-componentes/family-discos-duros/']
-
+        
         categories = response.xpath('//ul[contains(@class,"sub-categories")]//li[contains(@class,"cat-item")]//a/@href')
         for category in categories:
             if str(response.urljoin(category.get())) in catList:

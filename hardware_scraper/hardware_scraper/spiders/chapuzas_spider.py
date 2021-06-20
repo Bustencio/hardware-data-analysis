@@ -26,7 +26,7 @@ class ChapuzasSpider(scrapy.Spider):
         # URL of the next page
         current_page = response.xpath('//div[contains(@class,"nav-links")]/span[contains(@class,"page-numbers current")]/text()').get()
         next_page = response.xpath('//div[contains(@class,"nav-links")]/a[contains(@class,"next")]/@href').get()
-        if next_page and current_page < 30:
+        if next_page and int(current_page) < 30:
             next_url = response.urljoin(next_page)
             yield scrapy.Request(next_url, self.parse)
         else:

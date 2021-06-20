@@ -14,7 +14,7 @@ NEWSPIDER_MODULE = 'hardware_scraper.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36 Edg/91.0.864.41'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -67,7 +67,6 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'hardware_scraper.pipelines.HardwareScraperPipeline': 300,
     'hardware_scraper.pipelines.ItemIndexerPipeline' : 301
 }
 
@@ -89,7 +88,7 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 #HTTPCACHE_ENABLED = True
 #HTTPCACHE_EXPIRATION_SECS = 0
 #HTTPCACHE_DIR = 'httpcache'
-#HTTPCACHE_IGNORE_HTTP_CODES = [403]
+HTTPCACHE_IGNORE_HTTP_CODES = [403]
 HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
 HTTPERROR_ALLOWED_CODES = [404]
 

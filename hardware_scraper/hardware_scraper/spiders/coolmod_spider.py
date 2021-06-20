@@ -19,15 +19,17 @@ class CoolmodSpider(scrapy.Spider):
             logging.warning("Scraping category %s " % (url))
             return scrapy.Request(url, self.load_items, cb_kwargs=dict(item_url=url))
 
+
     # Scrapes links for every category from main page
     def parse(self, response):
         catList = ['https://www.coolmod.com/componentes-pc-placas-base', 'https://www.coolmod.com/componentes-pc-procesadores', 'https://www.coolmod.com/tarjetas-gráficas', 'https://www.coolmod.com/componentes-pc-memorias-ram', 'https://www.coolmod.com/componentes-pc-discos-duros']
-
+    
         categories = response.xpath('//li[contains(@class,"mod-li-cat")]//a/@href')
         for category in categories:
             if str(response.urljoin(category.extract())) in catList:
                 self.all_categories.append(response.urljoin(category.extract()))
         yield self.yield_category()
+
 
     # Scrapes products from every page of each category
     def load_items(self, response, item_url):
