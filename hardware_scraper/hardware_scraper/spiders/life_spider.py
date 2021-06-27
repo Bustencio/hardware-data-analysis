@@ -34,8 +34,12 @@ class LifeSpider(scrapy.Spider):
 
         script = """
         function main(splash, args)
+
+            // Esperamos a que se cargue la página por primera vez
             assert(splash:go(args.url))
             assert(splash:wait(2))
+
+            // Mientras este siga saliendo, accionamos el botón de carga nuevos artículos
             while splash:select('#yith-infs-button') do
                 local element = splash:select('#yith-infs-button')
                 local bounds = element:bounds()
@@ -51,30 +55,32 @@ class LifeSpider(scrapy.Spider):
                             args={'lua_source': script, 'timeout': 300})
 
     def parse_item_list(self, response):
-
-        # Create item object
+        # Identificamos cada artículo por la etiqueta de clase product-item__inner
         products = response.xpath('//div[contains(@class,"product-item__inner")]')
         for product in products:
             item = Product()
+            # Nombre del producto
             item['item_id'] = product.xpath('.//h2[contains(@class,"woocommerce-loop-product__title")]/text()').get()
+            # Precio actual del artículo
             item['item_price'] = float(str(product.xpath('.//span[contains(@class,"woocommerce-Price-amount amount")]/text()').get()).replace('.','').replace(',','.'))
+            # Categoría del producto
             item['item_category'] = response.xpath('//h1[contains(@class,"page-title")]/text()').get()
+            # Página de origen
             item['item_source'] = 'life-informatica'   
+            # Enlace al producto
             item['item_link'] = product.xpath('.//a[contains(@class,"woocommerce-LoopProduct-link")]/@href').get()
+            # Comprobamos si el producto está en oferta y calculamos el descuento
             sale = product.xpath('.//span[contains(@class,"dto-loop")]/text()').get()
-
             if sale is None:
                 item['item_sale'] = False
                 item['item_discount'] = 0
             else:
                 item['item_sale'] = True
-
                 salePrice = float(str(product.xpath('.//del//span[contains(@class,"woocommerce-Price-amount amount")]/text()').get()).replace('.','').replace(',','.'))
                 item['item_discount'] = int(100-(item['item_price']*100//salePrice))
-
+            # Comprobamos si el producto está disponible
             stock = product.xpath('.//span[contains(@class,"rebajado")]').get()
             stockText = product.xpath('./span/text()').get()
-
             if stock is None or stockText == 'Sin stock':
                 item['item_available'] = False
             else:

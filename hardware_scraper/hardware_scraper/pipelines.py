@@ -9,9 +9,13 @@ from elasticsearch import Elasticsearch, ElasticsearchException
 
 
 class ItemIndexerPipeline:
+
     def open_spider(self, spider):
         try:
+            # Inicializamos la conexión de manera global para que pueda ser usada por el resto de funciones
             global es
+            # No es necesario especificar la IP o el puerto ya que por defecto Elasticsearch 
+            # busca una instancia disponible en localhost:9200
             es = Elasticsearch(timeout = 300, retry_on_timeout = True)
             
         except Exception as e: 
@@ -21,7 +25,6 @@ class ItemIndexerPipeline:
     def process_item(self, item, spider):
         try:
             source = item["item_source"]
-
             now = datetime.datetime.now()
 
             if source is 'pccomponentes':

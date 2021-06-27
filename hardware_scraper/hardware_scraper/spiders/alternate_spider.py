@@ -53,18 +53,20 @@ class AlternateSpider(scrapy.Spider):
     # Scrapes products from every page of each category
     def parse_item_list(self, response):
 
-        # Create item object
+        # Identificamos cada artículo por la etiqueta de clase productBox
         products = response.xpath('//a[contains(@class,"productBox")]')
-
         for product in products:
             item = Product()
+            # Extraemos la marca y el modelo del producto y los unimos en un único identificador.
             item_brand = product.xpath('.//div[contains(@class,"product-name")]/span/text()').get().replace('®','').strip()
             item_name = product.xpath('.//div[contains(@class,"product-name")]/text()').get().replace('®','').strip()
             item['item_id'] = item_brand + ' ' + item_name
+
+
             item['item_price'] = float(str(product.xpath('.//span[contains(@class,"price")]/text()').get()).replace('.','').replace(',','.')[2:])
             item['item_category'] = response.xpath('//div[contains(@class,"listing-container")]//h1/text()').get().strip()
             item['item_source'] = 'alternate'   
-            item['item_link'] = product.xpath('./@href').extract_first()
+            item['item_link'] = product.xpath('./@href').get()
             sale = product.xpath('.//span[contains(@class,"old-price")]/text()').get()
 
             if sale is None:
@@ -72,6 +74,8 @@ class AlternateSpider(scrapy.Spider):
                 item['item_discount'] = 0
             else:
                 item['item_sale'] = True
+
+                sale = product.xpath('.//span[contains(@class,"old-price")]/text()').get()
                 salePrice = float(str(sale.replace(',','.').strip())[:-2])
                 item['item_discount'] = int(100-(item['item_price']*100//salePrice))
 
